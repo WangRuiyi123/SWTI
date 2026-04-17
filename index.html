@@ -121,6 +121,7 @@ body {
   border-radius: 20px;
   padding: 32px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  text-align: center;
 }
 .result-title {
   font-size: 22px;
@@ -137,10 +138,21 @@ body {
   line-height: 1.9;
   color: #444;
   white-space: pre-line;
+  text-align: left;
 }
 .restart {
   margin-top: 30px;
   text-align: center;
+}
+/* 结果图片样式 */
+.result-img {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: block;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 </style>
 </head>
@@ -169,10 +181,12 @@ body {
     </div>
   </div>
 
-  <!-- 结果页 -->
+  <!-- 结果页 + 图片 -->
   <div class="screen" id="pageResult">
     <div class="result-page">
       <div class="result-title">你的测试结果</div>
+      <!-- 👇 这里是自动显示的图片 -->
+      <img id="resultImg" class="result-img" src="" alt="结果头像">
       <div class="result-name" id="resultName"></div>
       <div class="result-desc" id="resultDesc"></div>
       <div class="restart">
@@ -452,7 +466,7 @@ const questions = [
       {t:"失去了情感的连接，变得麻木、疏离且不再有归属感。",k:"A"},
       {t:"失去了想象的灵光，生活变成了一部毫无悬念的纪录片。",k:"B"},
       {t:"失去了生命的动能，变得不再勇敢、不再有突破的冲劲。",k:"C"},
-      {t:"失去了对生活的掌控，秩序崩溃，生活变得廉价且混乱”。",k:"D"}
+      {t:"失去了对生活的掌控，秩序崩溃，生活变得廉价且混乱。",k:"D"}
     ]
   },
   {
@@ -512,7 +526,7 @@ const questions = [
   {
     q:"当你心情大好时，你通常会？",
     o:[
-      {t:" 写一段感性的话，分享此刻的幸福感给重要的人”。",k:"A"},
+      {t:" 写一段感性的话，分享此刻的幸福感给重要的人。",k:"A"},
       {t:"开始一些天马行空的创作，或者去收集一些开心的笑脸。",k:"B"},
       {t:"带上身边最亲近的存在大闹一场，享受纯粹的生命喜悦。",k:"C"},
       {t:"给自己做一个精致的仪式，提升这一刻的生活品质感。",k:"D"}
@@ -529,7 +543,7 @@ const questions = [
   }
 ];
 
-// 结果文案
+// 结果文案 + 图片
 const resultData = {
   A: {
     name: "灰鸿 —— 现实与浪漫的策展人",
@@ -604,6 +618,7 @@ function prevQ() {
   }
 }
 
+// 显示结果 + 图片
 function showResult() {
   const count = { A: 0, B: 0, C: 0, D: 0 };
   answers.forEach(k => count[k]++);
@@ -611,9 +626,13 @@ function showResult() {
   if (count.B > count[maxKey]) maxKey = "B";
   if (count.C > count[maxKey]) maxKey = "C";
   if (count.D > count[maxKey]) maxKey = "D";
+  
   const res = resultData[maxKey];
   document.getElementById("resultName").innerText = res.name;
   document.getElementById("resultDesc").innerText = res.desc;
+  // 👇 自动显示图片
+  document.getElementById("resultImg").src = res.img;
+  
   showScreen("pageResult");
 }
 
